@@ -7,7 +7,14 @@ from googleapiclient.http import MediaFileUpload
 import dropbox
 from dropbox.files import WriteMode
 from dropbox.exceptions import ApiError
-import sys
+
+# Replace with access token
+ACCESS_TOKEN = 'access_token'
+# Path to downloaded JSON file
+CREDENTIALS_FILE = 'credentials.json'
+
+# Initialize the Dropbox client
+dbx = dropbox.Dropbox(ACCESS_TOKEN)
 
 # Set up the Google Drive API client
 def setup_drive_api_client(credentials_file):
@@ -51,18 +58,32 @@ def upload_image_to_drive(drive_service, image_path, folder_id=None):
 
     return file
 
-def main():
-    # Path to downloaded JSON file
-    CREDENTIALS_FILE = 'credentials.json'
+def upload_image_to_dropbox(image_path, dropbox_path):
+    with open(image_path, 'rb') as image_file:
+        try:
+            dbx.files_upload(image_file.read(), dropbox_path, mode=WriteMode('overwrite'))
+            print(f"Image '{image_path}' uploaded to Dropbox as '{dropbox_path}'.")
+        except ApiError as e:
+            if e.error.is_path() and e.error.get_path().is_conflict():
+                print(f"Conflict with file '{dropbox_path}'.")
+            elif e.user_message_text:
+                print(e.user_message_text)
+            else:
+                print(e)
 
+
+def main():
+    
     # Path to the image upload
     IMAGE_PATH = 'example.png'
+    DROPBOX_PATH = 'example.png'
 
     # Optional: ID of the folder want to upload the image to
     FOLDER_ID = None
 
     drive_service = setup_drive_api_client(CREDENTIALS_FILE)
     upload_image_to_drive(drive_service, IMAGE_PATH, FOLDER_ID)
+    # upload_image_to_dropbox(IMAGE_PATH, DROPBOX_PATH)
 
 if __name__ == '__main__':
     main()
