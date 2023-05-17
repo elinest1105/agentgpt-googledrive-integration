@@ -4,6 +4,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
+import dropbox
+from dropbox.files import WriteMode
+from dropbox.exceptions import ApiError
+import sys
 
 # Set up the Google Drive API client
 def setup_drive_api_client(credentials_file):
