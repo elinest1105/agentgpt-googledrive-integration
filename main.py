@@ -48,13 +48,13 @@ def upload_image_to_drive(drive_service, image_path, folder_id=None):
     return file
 
 def main():
-    # Replace with the path to your downloaded JSON file
+    # Path to downloaded JSON file
     CREDENTIALS_FILE = 'credentials.json'
 
-    # Replace with the path to the image you want to upload
+    # Path to the image upload
     IMAGE_PATH = 'example.png'
 
-    # Optional: Replace with the ID of the folder you want to upload the image to
+    # Optional: ID of the folder want to upload the image to
     FOLDER_ID = None
 
     drive_service = setup_drive_api_client(CREDENTIALS_FILE)
